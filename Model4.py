@@ -80,10 +80,18 @@ def detect_enemies_and_mario(frame, enemy_templates, mario_templates):
     for name, template in enemy_templates.items():
         res = cv2.matchTemplate(frame_gray, template, cv2.TM_CCOEFF_NORMED)
         locs = np.where(res >= MATCH_THRESHOLD)
+        frame_h, frame_w = frame_gray.shape
+        cell_w = frame_w // 2
+        cell_h = frame_h // 4
+        bottom_right_x_min = cell_w
+        bottom_right_y_min = 3 * cell_h  # 4th row starts at 3 * cell_h
+        
         for (x, y) in zip(locs[1], locs[0]):
-            enemy_visible = 1
-            if VERBOSE_DETECTION:
-                print(f"👾 Detected '{name}' at ({x}, {y}) | Match ≥ {MATCH_THRESHOLD}")
+            if x >= bottom_right_x_min and y >= bottom_right_y_min:
+                enemy_visible = 1
+                if VERBOSE_DETECTION:
+                    print(f"👾 Detected '{name}' in BOTTOM-RIGHT at ({x}, {y}) | Match ≥ {MATCH_THRESHOLD}")
+
 
     # Mario detection
     for name, template in mario_templates.items():
