@@ -1,0 +1,1 @@
+Fill this folder with several sprite frames of specific enemies.

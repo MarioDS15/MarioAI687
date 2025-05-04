@@ -12,6 +12,8 @@ from PIL import Image
 import cv2
 import gc
 
+# THIS MODEL IS FOR TESTING OPEN CV WITH OPENAI GYM SUPER MARIO BROS. IT IS NOT USED IN THE FINAL PROJECT.
+
 MODEL_DESCRIPTION = "Simple Movement + OpenCV Template Matching | Enemy-Aware"
 TEMPLATE_DIR = "Enemy Templates"
 MATCH_THRESHOLD = 0.7  # Confidence threshold for matchTemplate
@@ -81,7 +83,7 @@ def run(config):
                     start_episode = int(last_entry.get("Episode", 0)) + 1
                     print(f"🔁 Resuming from episode {start_episode}, epsilon = {agent.epsilon}")
         except Exception as e:
-            print(f"⚠️ Could not restore epsilon/episode: {e}")
+            print(f"Could not restore epsilon/episode: {e}")
 
     # === Training Loop ===
     for i in range(start_episode, NUM_OF_EPISODES):
@@ -109,7 +111,7 @@ def run(config):
 
             # Reward shaping
             if info.get("flag_get"):
-                print(f"🏁 FLAG REACHED at episode {i}")
+                print(f"FLAG REACHED at episode {i}")
                 reward += 500
 
             current_x = info.get("x", 0)

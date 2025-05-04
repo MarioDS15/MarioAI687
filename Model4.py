@@ -25,7 +25,7 @@ def load_templates_from(folder_path):
     templates = {}
     folder = Path(folder_path)
     if not folder.exists():
-        print(f"❌ Folder not found: {folder}")
+        print(f"Folder not found: {folder}")
         return templates
 
     for file in folder.glob("*.png"):
@@ -36,7 +36,7 @@ def load_templates_from(folder_path):
             #template = cv2.GaussianBlur(template, (5, 5), 0.5)
             templates[name] = template
         else:
-            print(f"⚠️ Could not load {file.name}")
+            print(f"Could not load {file.name}")
     for file in folder.glob("*.jpg"):
         name = file.stem
         template = cv2.imread(str(file), cv2.IMREAD_GRAYSCALE)
@@ -45,11 +45,11 @@ def load_templates_from(folder_path):
             #template = cv2.GaussianBlur(template, (3, 3), 0.5)
             templates[name] = template
         else:
-            print(f"⚠️ Could not load {file.name}")
+            print(f"Could not load {file.name}")
     print("Mario templates loaded:")
     for name in templates.keys():
         if VERBOSE_DETECTION:
-            print(f"  ✅ {name}")
+            print(f" - {name}")
     return templates
 from PIL import Image
 from datetime import datetime
@@ -69,7 +69,7 @@ def save_debug_frame_with_box(frame, box_coords, label="Mario", match_val=None):
     save_path = DEBUG_MARIO_DIR / filename
 
     Image.fromarray(annotated).save(save_path)
-    print(f"📸 Screenshot saved: {save_path}")
+    print(f"Screenshot saved: {save_path}")
 
 
 def detect_enemies_and_mario(frame, enemy_templates, mario_templates):
@@ -90,7 +90,7 @@ def detect_enemies_and_mario(frame, enemy_templates, mario_templates):
             if x >= bottom_right_x_min and y >= bottom_right_y_min:
                 enemy_visible = 1
                 if VERBOSE_DETECTION:
-                    print(f"👾 Detected '{name}' in BOTTOM-RIGHT at ({x}, {y}) | Match ≥ {MATCH_THRESHOLD}")
+                    print(f"Enemy Detected '{name}' in BOTTOM-RIGHT at ({x}, {y}) | Match ≥ {MATCH_THRESHOLD}")
 
 
     # Mario detection
@@ -142,7 +142,7 @@ def run(config):
     start_episode = 0
 
     if os.path.exists(checkpoint_path):
-        print(f"📦 Loading model from: {checkpoint_path}")
+        print(f"Loading model from: {checkpoint_path}")
         agent.load_model(checkpoint_path)
         try:
             log_path = os.path.join("models", TAG, "training_log.csv")
@@ -152,9 +152,9 @@ def run(config):
                     last_entry = reader[-1]
                     agent.epsilon = float(last_entry.get("Epsilon", 1.0))
                     start_episode = int(last_entry.get("Episode", 0)) + 1
-                    print(f"🔁 Resuming from episode {start_episode}, epsilon = {agent.epsilon}")
+                    print(f"Resuming from episode {start_episode}, epsilon = {agent.epsilon}")
         except Exception as e:
-            print(f"⚠️ Could not restore epsilon/episode: {e}")
+            print(f"Could not restore epsilon/episode: {e}")
 
     for i in range(start_episode, NUM_OF_EPISODES):
         done = False
@@ -177,7 +177,7 @@ def run(config):
             new_state, reward, done, truncated, info = env.step(a)
 
             if info.get("flag_get"):
-                print(f"🏁 FLAG REACHED at episode {i}")
+                print(f"Level completed at episode {i}")
                 reward += 500
 
             current_x = info.get("x", 0)
@@ -203,7 +203,7 @@ def run(config):
 
             state = new_state
 
-        print(f"🎮 Episode {i} | Total reward: {total_reward:.1f} | Epsilon: {agent.epsilon:.4f} | Model: {TAG}")
+        print(f"Episode {i} | Total reward: {total_reward:.1f} | Epsilon: {agent.epsilon:.4f} | Model: {TAG}")
 
         with open(log_file_path, mode='a', newline='') as file:
             writer = csv.writer(file)
