@@ -1,7 +1,7 @@
 import torch
 from config import get_config, MODEL_MODULES, MODEL_IDS
 
-# === GPU CONFIGURATION (optional) ===
+#GPU CONFIGURATION(optional)
 if torch.cuda.is_available():
     print("Using CUDA:", torch.cuda.get_device_name(0))
     torch.cuda.set_per_process_memory_fraction(0.75, 0)
@@ -11,7 +11,7 @@ if torch.cuda.is_available():
 else:
     print("CUDA not available. (Running on CPU.)")
 MODEL_IDS = [4, 2, 1]
-# === RUN EACH MODEL SEQUENTIALLY ===
+# RUN EACH MODEL SEQUENTIALLY 
 for model_id in MODEL_IDS:
     # Dynamically import the model module
     module_name = MODEL_MODULES[model_id]
